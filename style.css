@@ -3338,7 +3338,7 @@ body {
   }
   .ssss2 {
     padding-left: 0;
-    padding-bottom: 25px;
+    padding-bottom: 0;
     width: 100%;
   }
   .tour-day-four_block_right {
@@ -3403,7 +3403,7 @@ body {
   }
 
   .tour-seven-two_block_p {
-    padding-bottom: 0 !important;
+    padding-bottom: 0;
   }
   .header-content_item_timetable {
     display: flex;
