@@ -27,26 +27,50 @@ document.querySelector(".plus").addEventListener("click", () => {
 });
 
 /////////////////////////////////////////////////////////////////////////////
-let img1 = 'url("./img/sliders/header-slide-one.png")';
-img2 = 'url("./img/sliders/header-slide-two.png")';
-img3 = 'url("./img/sliders/header-slide-three.png")';
-let sliderHeader = [img1, img2, img3];
+let img1Header = 'url("./img/sliders/header-slide-one.png")';
+img2Header = 'url("./img/sliders/header-slide-two.png")';
+img3Header = 'url("./img/sliders/header-slide-three.png")';
+
+img1DayOne = "url(./img/slider-two/slide-one.png)";
+img2DayOne = "url(./img/slider-two/slide-one.png)";
+img3DayOne = "url(./img/slider-two/slide-one.png)";
+
+let sliderHeader = [img1Header, img2Header, img3Header];
+let sliderDayOne = [img1DayOne, img2DayOne, img3DayOne];
 let isSliderMoving = false;
 
-sliderLeft = document.querySelector(".slider-header-img_left");
-sliderCenter = document.querySelector(".slider-header-img_center");
-sliderRight = document.querySelector(".slider-header-img_right");
+headerSliderLeft = document.querySelector(".slider-header-img_left");
+headerSliderCenter = document.querySelector(".slider-header-img_center");
+headerSliderRight = document.querySelector(".slider-header-img_right");
 
-function imgSave() {
-  sliderLeft.style.backgroundImage = sliderHeader[0];
-  sliderCenter.style.backgroundImage = sliderHeader[1];
-  sliderRight.style.backgroundImage = sliderHeader[2];
+sliderDayOneLeft = document.querySelector(".slider-img-day1_left");
+sliderDayOneCenter = document.querySelector(".slider-img-day1_center");
+sliderDayOneRight = document.querySelector(".slider-img-day1_right");
+
+function imgSaveHeader() {
+  headerSliderLeft.style.backgroundImage = sliderHeader[0];
+  headerSliderCenter.style.backgroundImage = sliderHeader[1];
+  headerSliderRight.style.backgroundImage = sliderHeader[2];
   console.log(sliderHeader);
 }
 
-imgSave();
+function imgSaveDayOne() {
+  sliderDayOneLeft.style.backgroundImage = sliderDayOne[0];
+  sliderDayOneCenter.style.backgroundImage = sliderDayOne[1];
+  sliderDayOneRight.style.backgroundImage = sliderDayOne[2];
+  console.log(sliderDayOne);
+}
 
-function sliderLeftMove() {
+imgSaveHeader();
+imgSaveDayOne();
+
+function sliderLeftMoveV1(
+  sliderLeft,
+  sliderCenter,
+  sliderRight,
+  save,
+  removeSlide
+) {
   if (isSliderMoving) {
     return;
   }
@@ -68,9 +92,8 @@ function sliderLeftMove() {
     duration: 300,
     iterations: 1,
   }).onfinish = function () {
-    sliderHeader.push(sliderHeader[0]), // Добавить img1 в конец массива
-      sliderHeader.splice(0, 1), // Удалить один с индексом 0
-      sliderRight.classList.add("slider-hidden2");
+    removeSlide();
+    sliderRight.classList.add("slider-hidden2");
     setTimeout(() => {
       sliderRight.classList.add("slider-unhidden");
     }, 0);
@@ -81,11 +104,17 @@ function sliderLeftMove() {
 
       isSliderMoving = false;
     }, 300);
-    imgSave();
+    save();
   };
 }
 
-function sliderLeftRight() {
+function sliderLeftRightV1(
+  sliderLeft,
+  sliderCenter,
+  sliderRight,
+  save,
+  removeSlide
+) {
   if (isSliderMoving) {
     return;
   }
@@ -112,8 +141,7 @@ function sliderLeftRight() {
     duration: 300,
     iterations: 1,
   }).onfinish = function () {
-    const lastImage = sliderHeader.pop(); // Удалить последний объект из массива
-    sliderHeader.splice(0, 0, lastImage); // Добавить его в начало массива
+    removeSlide();
     sliderLeft.classList.add("slider-hidden2");
     setTimeout(() => {
       sliderLeft.classList.add("slider-unhidden");
@@ -124,14 +152,71 @@ function sliderLeftRight() {
 
       isSliderMoving = false;
     }, 300);
-    imgSave();
+    save();
   };
 }
 
+function removeArrayHeaderRigth() {
+  const lastImage = sliderHeader.pop(); // Удалить последний объект из массива
+  sliderHeader.splice(0, 0, lastImage); // Добавить его в начало массива
+}
+// function removeArrayHeaderLeft() {
+//   howToRemove.push(howToRemove[0]), // Добавить img1 в конец массива
+//     howToRemove.splice(0, 1); // Удалить один с индексом 0
+// }
+function removeArrayHeaderLeft() {
+  sliderHeader.push(sliderHeader[0]), // Добавить img1 в конец массива
+    sliderHeader.splice(0, 1); // Удалить один с индексом 0
+}
+
+function removeArrayDayOneLeft() {
+  sliderDayOne.push(sliderDayOne[0]), // Добавить img1 в конец массива
+    sliderDayOne.splice(0, 1); // Удалить один с индексом 0
+}
+
+function removeArrayDayOneRight() {
+  const lastImageDayOne = sliderDayOne.pop(); // Удалить последний объект из массива
+  sliderDayOne.splice(0, 0, lastImageDayOne); // Добавить его в начало массива
+}
+
+//////////////// СЛАЙДЕР ХЕДЕР
 document.querySelector(".header-left-arrow").onclick = () => {
-  sliderLeftMove();
+  sliderLeftMoveV1(
+    headerSliderLeft,
+    headerSliderCenter,
+    headerSliderRight,
+    imgSaveHeader,
+    removeArrayHeaderLeft
+  );
 };
 
 document.querySelector(".header-right-arrow").onclick = () => {
-  sliderLeftRight();
+  sliderLeftRightV1(
+    headerSliderLeft,
+    headerSliderCenter,
+    headerSliderRight,
+    imgSaveHeader,
+    removeArrayHeaderRigth
+  );
+};
+/////////////////// СЛАЙДЕР ДЕНЬ 1
+
+document.querySelector(".day-one-left-arrow").onclick = () => {
+  sliderLeftMoveV1(
+    sliderDayOneLeft,
+    sliderDayOneCenter,
+    sliderDayOneRight,
+    imgSaveDayOne,
+    removeArrayDayOneLeft
+  );
+};
+
+document.querySelector(".day-one-right-arrow").onclick = () => {
+  sliderLeftRightV1(
+    sliderDayOneLeft,
+    sliderDayOneCenter,
+    sliderDayOneRight,
+    imgSaveDayOne,
+    removeArrayDayOneRight
+  );
 };
